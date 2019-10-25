@@ -12,6 +12,11 @@ use rocket_contrib::json::JsonValue;
 mod product;
 use product::{Product};
 
+#[get("/")]
+fn greeting() -> String {
+    format!("Welcome Everybody!!")
+}
+
 #[post("/", data = "<product>")]
 fn create_product(product: Json<Product>) -> Json<Product> {
     product
@@ -28,7 +33,7 @@ fn delete_product(id: i32) -> JsonValue {
 }
 
 #[get("/<id>")]
-fn products(id: i32) -> String{
+fn get_one_product(id: i32) -> String{
     format!("Product {}", id)
 }
 
@@ -42,7 +47,7 @@ fn list_products() -> JsonValue {
 
 fn main() {
     rocket::ignite()
-    .mount("/products", routes![list_products])
-    .mount("/product", routes![create_product, update_product, delete_product])
+    .mount("/", routes![greeting])
+    .mount("/products", routes![list_products,get_one_product, create_product, update_product, delete_product])
     .launch();
 }
